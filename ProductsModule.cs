@@ -76,7 +76,7 @@ namespace _03_03_2023
                 string queary = @"UPDATE `uch`.`items` 
                                 SET `item_name` = @name, 
 		                            `item_desc` = @desc, 
-                                    `item_cost` = @price,
+                                    `item_cost` = @price
                                 WHERE (`item_id` = @pcode)";
                 MySqlCommand cmd = new MySqlCommand(queary, cn);
                 try

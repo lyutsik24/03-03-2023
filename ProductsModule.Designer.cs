@@ -45,7 +45,7 @@ namespace _03_03_2023
             // 
             this.lblPcode.AutoSize = true;
             this.lblPcode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPcode.Location = new System.Drawing.Point(257, 9);
+            this.lblPcode.Location = new System.Drawing.Point(250, 9);
             this.lblPcode.Name = "lblPcode";
             this.lblPcode.Size = new System.Drawing.Size(0, 24);
             this.lblPcode.TabIndex = 1;
@@ -105,7 +105,7 @@ namespace _03_03_2023
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(89, 41);
             this.btnOk.TabIndex = 8;
-            this.btnOk.Text = "Окей";
+            this.btnOk.Text = "Закрыть";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 

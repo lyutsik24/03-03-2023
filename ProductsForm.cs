@@ -14,11 +14,13 @@ namespace _03_03_2023
     public partial class ProductsForm : Form
     {
         public int? IdProduct;
-        bool ProductSelected;
+        public DataTable dataTable = new DataTable("Cort");
+        public int CortCounter = 0;
 
         public ProductsForm()
         {
             InitializeComponent();
+            CortDataTable();
         }
 
         private void Products_Load(object sender, EventArgs e)
@@ -28,14 +30,22 @@ namespace _03_03_2023
 
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+
+            IdProduct = Convert.ToInt32(dgvProducts.CurrentRow.Cells[2].Value);
+            string ColumnName = dgvProducts.Columns[e.ColumnIndex].Name;
+            if (ColumnName == "Add")
             {
-                DataGridViewRow selectedRow = dgvProducts.Rows[e.RowIndex];
-                IdProduct = Convert.ToInt32(selectedRow.Cells[0].Value);
-                ProductSelected = true;
+                if (Convert.ToDouble(dgvProducts.CurrentRow.Cells["Qty"].Value) > 0)
+                {
+                    dataTable.Rows.Add(new Object[]{
+                    ++CortCounter,
+                    dgvProducts.CurrentRow.Cells["№"].Value,
+                    dgvProducts.CurrentRow.Cells["Наименование"].Value,
+                    dgvProducts.CurrentRow.Cells["Qty"].Value,
+                    Convert.ToDouble(dgvProducts.CurrentRow.Cells["Qty"].Value) * Convert.ToDouble(dgvProducts.CurrentRow.Cells["Цена"].Value),
+                });
+                }
             }
-            Specification module = new Specification(this);
-            module.ShowDialog();
         }
 
         private void btn_Logout_Click(object sender, EventArgs e)
@@ -91,16 +101,22 @@ namespace _03_03_2023
                     MySqlDataAdapter da = new MySqlDataAdapter(query, cn);
                     da.Fill(dt);
                     dgvProducts.DataSource = dt;
-                    //dgvProducts.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                    //dgvProducts.Columns[0].DisplayIndex = 4;
                     dgvProducts.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                    dgvProducts.Columns[0].DisplayIndex = 0;
-                    dgvProducts.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    dgvProducts.Columns[1].DisplayIndex = 1;
+                    dgvProducts.Columns[0].DisplayIndex = 5;
+                    dgvProducts.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dgvProducts.Columns[1].DisplayIndex = 4;
                     dgvProducts.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                    dgvProducts.Columns[2].DisplayIndex = 2;
-                    dgvProducts.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                    dgvProducts.Columns[3].DisplayIndex = 3;
+                    dgvProducts.Columns[2].DisplayIndex = 0;
+                    dgvProducts.Columns[2].ReadOnly = true;
+                    dgvProducts.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    dgvProducts.Columns[3].DisplayIndex = 1;
+                    dgvProducts.Columns[3].ReadOnly = true;
+                    dgvProducts.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dgvProducts.Columns[4].DisplayIndex = 2;
+                    dgvProducts.Columns[4].ReadOnly = true;
+                    dgvProducts.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dgvProducts.Columns[5].DisplayIndex = 3;
+                    dgvProducts.Columns[5].ReadOnly = true;
                     if (User.UserRole == 2)
                     {
                         btn_Delete.Hide();
@@ -116,6 +132,47 @@ namespace _03_03_2023
         private void Products_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void dgvProducts_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Specification module = new Specification(this);
+            module.ShowDialog();
+        }
+
+        private void CortDataTable()
+        {
+            DataColumn datatableColumnNumber = new DataColumn();
+            DataColumn datatableColumnId = new DataColumn();
+            DataColumn datatableColumnName = new DataColumn();
+            DataColumn datatableColumnPrice = new DataColumn();
+            DataColumn datatableColumnQty = new DataColumn();
+
+            datatableColumnNumber.DataType = typeof(Int32);
+            datatableColumnNumber.ColumnName = "№";
+            dataTable.Columns.Add(datatableColumnNumber);
+
+            datatableColumnId.DataType = typeof(Int32);
+            datatableColumnId.ColumnName = "#";
+            dataTable.Columns.Add(datatableColumnId);
+
+            datatableColumnName.DataType = typeof(string);
+            datatableColumnName.ColumnName = "Наименование";
+            dataTable.Columns.Add(datatableColumnName);
+
+            datatableColumnQty.DataType = typeof(Int32);
+            datatableColumnQty.ColumnName = "Кол-во";
+            dataTable.Columns.Add(datatableColumnQty);
+
+            datatableColumnPrice.DataType = typeof(double);
+            datatableColumnPrice.ColumnName = "Общая сумма";
+            dataTable.Columns.Add(datatableColumnPrice);
+        }
+
+        private void btnCort_Click(object sender, EventArgs e)
+        {
+            Cort module = new Cort(this, dataTable);
+            module.ShowDialog();
         }
     }
 }
